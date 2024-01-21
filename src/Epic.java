@@ -1,15 +1,40 @@
 import java.util.ArrayList;
 
 public class Epic {
+    private int id ;
     private String name;
     private Status status;
-    private ArrayList<SubTask> description = new ArrayList<>();
+    private String description;
+    private ArrayList<SubTask> subTasksListInEpic = new ArrayList<>();
 
-    public Epic (String name) {
+    public Epic () {
+
+    }
+    public Epic (String name, String description) {
         this.name = name;
+        this.description = description;
+        this.id = TaskManager.nextId();
+        this.status = Status.NEW;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getName() {
+
         return name;
     }
 
@@ -25,17 +50,19 @@ public class Epic {
         this.status = status;
     }
 
-    public ArrayList<SubTask> getDescription() {
-        return description;
+    public ArrayList<SubTask> getSubTasksListInEpic() {
+        return subTasksListInEpic;
     }
 
-    public void setDescription(ArrayList<SubTask> description) {
-        this.description = description;
+    public void setSubTasksInEpic(ArrayList<SubTask> subTasksListInEpic) {
+        this.subTasksListInEpic = subTasksListInEpic;
     }
 
     @Override
     public String toString() {
-        return "Тип: Эпик " + "\nСтатус: " + status + "\nНазвание: " + name;
+        return  "Идентификатор " + id + "\nТип: Эпик " + "\nСтатус: "
+                + status + "\nНазвание: " + name
+                + "\nСписок подзадач: " + subTasksListInEpic;
     }
 
 }
