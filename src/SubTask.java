@@ -1,8 +1,6 @@
-import java.util.ArrayList;
-
 public class SubTask {
-    private int id ;
-    private int epicId;
+    private final int id;
+    private final int epicId;
     private String name;
     private String content;
     private String description;
@@ -15,20 +13,13 @@ public class SubTask {
         this.id = TaskManager.nextId();
         this.status = Status.NEW;
     }
+
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public int getEpicId() {
         return epicId;
-    }
-
-    public void setEpicId(int epicId) {
-        this.epicId = epicId;
     }
 
     public String getName() {
@@ -65,7 +56,7 @@ public class SubTask {
 
     @Override
     public String toString() {
-        return "Индентифкатор " + id + "\nТип: Подзадача " + "\nСтатус: " + status
+        return "Идентификатор " + "\nТип: Подзадача " + "\nСтатус: " + status
                 + "\nНазвание: " + name + "\n" + description;
     }
 }

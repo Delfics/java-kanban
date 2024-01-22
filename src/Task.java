@@ -1,10 +1,8 @@
-import java.util.ArrayList;
-
 public class Task {
-    private int id;
+    private final int id;
     private String name;
     private Status status;
-    private String description ;
+    private String description;
 
     public Task(String name, String description) {
         this.name = name;
@@ -18,9 +16,6 @@ public class Task {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
     public String getName() {
         return name;
     }
@@ -34,6 +29,7 @@ public class Task {
     }
 
     public void setStatus(Status status) {
+
         this.status = status;
     }
 
@@ -44,12 +40,11 @@ public class Task {
     public void setDescription(String description) {
         this.description = description;
     }
+
     @Override
     public String toString() {
-        return "Индентифкатор " + id + "\nТип: Задача " + "\nСтатус: " + status
-               + "\nНазвание: " + name + "\n" + description;
+        return "Идентификатор " + id + "\nТип: Задача " + "\nСтатус: " + status
+                + "\nНазвание: " + name + "\n" + description;
 
     }
-
-
 }

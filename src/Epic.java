@@ -1,16 +1,13 @@
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Epic {
-    private int id ;
+    private final int id;
     private String name;
     private Status status;
     private String description;
-    private ArrayList<SubTask> subTasksListInEpic = new ArrayList<>();
+    private HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
-    public Epic () {
-
-    }
-    public Epic (String name, String description) {
+    public Epic(String name, String description) {
         this.name = name;
         this.description = description;
         this.id = TaskManager.nextId();
@@ -19,10 +16,6 @@ public class Epic {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getDescription() {
@@ -34,8 +27,31 @@ public class Epic {
     }
 
     public String getName() {
-
         return name;
+    }
+
+    public void removeSubTasks() {
+        this.subTasks = new HashMap<>();
+    }
+
+    public void addSubTask(SubTask subTask) {
+        this.subTasks.put(subTask.getId(), subTask);
+    }
+
+    public void calculateStatus(Status status) {
+        if (status.equals(Status.IN_PROGRESS)) {
+            if (this.status.equals(Status.NEW)) {
+                this.status = Status.IN_PROGRESS;
+            }
+        } else if (status.equals(Status.DONE)) {
+            for (SubTask subTask : subTasks.values()) {
+                if (subTask.getStatus().equals(Status.IN_PROGRESS)
+                        || subTask.getStatus().equals(Status.NEW)) {
+                    return;
+                }
+            }
+            this.status = Status.DONE;
+        }
     }
 
     public void setName(String name) {
@@ -46,23 +62,15 @@ public class Epic {
         return status;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public ArrayList<SubTask> getSubTasksListInEpic() {
-        return subTasksListInEpic;
-    }
-
-    public void setSubTasksInEpic(ArrayList<SubTask> subTasksListInEpic) {
-        this.subTasksListInEpic = subTasksListInEpic;
+    public HashMap<Integer, SubTask> getSubTasksListInEpic() {
+        return subTasks;
     }
 
     @Override
     public String toString() {
-        return  "Идентификатор " + id + "\nТип: Эпик " + "\nСтатус: "
+        return "Идентификатор " + "\nТип: Эпик " + "\nСтатус: "
                 + status + "\nНазвание: " + name
-                + "\nСписок подзадач: " + subTasksListInEpic;
+                + "\nСписок подзадач в эпике: \n" + subTasks;
     }
 
 }
