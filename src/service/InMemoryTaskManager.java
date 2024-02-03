@@ -13,15 +13,14 @@ public class InMemoryTaskManager implements TaskManager {
     private HashMap<Integer, Task> tasks = new HashMap<>();
     private HashMap<Integer, SubTask> subTasks = new HashMap<>();
     private HashMap<Integer, Epic> epics = new HashMap<>();
-    private ArrayList<Task> historyTasks = new ArrayList<>(10);
 
-    public ArrayList<Task> getHistoryTasks() {
-        return historyTasks;
-    }
+    private final HistoryManager manager = Managers.getDefaultHistory();
+
+    private static final int MAX_SIZE = 10;
 
     private static int sequence = 1;
 
-    public static int nextId() {
+    private int nextId() {
         return sequence++;
     }
 
@@ -81,8 +80,8 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public SubTask updateSubTask(SubTask subTask) {
         calculateStatus(subTask.getStatus(), subTask.getEpicId());
-        SubTask updated = subTasks.put(subTask.getId(), subTask);
-        return updated;
+        subTasks.put(subTask.getId(), subTask);
+        return subTask;
     }
 
     @Override
@@ -123,13 +122,14 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateEpic(Epic epic) {
+    public Epic updateEpic(Epic epic) {
         Epic currentEpic = epics.get(epic.getId());
         if (currentEpic.getStatus().equals(epic.getStatus())) {
             epics.put(epic.getId(), epic);
-            return;
+            return epic;
         }
         System.out.println("У Эпика статус изменять нельзя");
+        return null;
     }
 
     @Override
@@ -191,17 +191,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getHistory() {
-        System.out.println("\nИстория просмотров задач: \n" + historyTasks);
-        return historyTasks;
+        return manager.getHistory();
     }
 
     private void historyCleaner(Task task) {
-        int maxSize = 10;
-        if (historyTasks.size() < maxSize) {
-            historyTasks.add(task);
+        if (manager.getHistory().size() < MAX_SIZE) {
+            manager.add(task);
         } else {
-            historyTasks.remove(0);
-            historyTasks.add(task);
+            manager.getHistory().remove(0);
+            manager.add(task);
+        }
     }
-}
 }

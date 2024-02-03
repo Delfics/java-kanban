@@ -5,11 +5,11 @@ import model.Status;
 import model.SubTask;
 import model.Task;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public interface TaskManager {
+
     List<Task> getHistory();
 
     HashMap<Integer, SubTask> getAllSubTasks();
@@ -42,7 +42,7 @@ public interface TaskManager {
 
     Epic createEpic(String name, String description);
 
-    void updateEpic(Epic epic);
+    Epic updateEpic(Epic epic);
 
     Epic getEpicById(int id);
 
