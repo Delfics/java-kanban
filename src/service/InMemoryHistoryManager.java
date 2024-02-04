@@ -7,12 +7,8 @@ import java.util.List;
 
 
 public class InMemoryHistoryManager implements HistoryManager {
+    public final static int MAX_SIZE = 10;
     private final ArrayList<Task> historyTasks = new ArrayList<>();
-
-    @Override
-    public ArrayList<Task> getHistoryTasks() {
-        return historyTasks;
-    }
 
     @Override
     public void add(Task task) {
@@ -27,7 +23,6 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void historyCleaner(Task task) {
-        int MAX_SIZE = 10;
         if (historyTasks.size() < MAX_SIZE) {
             historyTasks.add(task);
         } else {

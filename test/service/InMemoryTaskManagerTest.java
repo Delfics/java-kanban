@@ -4,6 +4,7 @@ import model.Epic;
 import model.Status;
 import model.SubTask;
 import model.Task;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -158,6 +159,8 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
+    @DisplayName("Мы напрямую работаем с InMemoryTaskManager, а не с HistoryManager." +
+            "Поэтому вся логика работы HistoryManager находится здесь в InMemoryTaskManager. ")
     void shouldCorrectlyCalculateHistoryIfGetTasksByIds() {
         String name = "Name";
         String desc = "Desc";

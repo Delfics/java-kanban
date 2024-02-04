@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
 public class InMemoryTaskManager implements TaskManager {
     private HashMap<Integer, Task> tasks = new HashMap<>();
     private HashMap<Integer, SubTask> subTasks = new HashMap<>();
@@ -16,7 +17,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     private final HistoryManager manager = Managers.getDefaultHistory();
 
-    private static final int MAX_SIZE = 10;
 
     private static int sequence = 1;
 
@@ -54,7 +54,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        historyCleaner(tasks.get(id));
+        manager.historyCleaner(tasks.get(id));
         return tasks.get(id);
     }
 
@@ -94,7 +94,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public SubTask getSubTaskById(int id) {
-        historyCleaner(subTasks.get(id));
+        manager.historyCleaner(subTasks.get(id));
         return subTasks.get(id);
     }
 
@@ -134,7 +134,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic getEpicById(int id) {
-        historyCleaner(epics.get(id));
+        manager.historyCleaner(epics.get(id));
         return epics.get(id);
     }
 
@@ -194,12 +194,5 @@ public class InMemoryTaskManager implements TaskManager {
         return manager.getHistory();
     }
 
-    private void historyCleaner(Task task) {
-        if (manager.getHistory().size() < MAX_SIZE) {
-            manager.add(task);
-        } else {
-            manager.getHistory().remove(0);
-            manager.add(task);
-        }
-    }
+
 }

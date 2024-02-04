@@ -5,18 +5,18 @@ import model.Status;
 import model.SubTask;
 import model.Task;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface TaskManager {
 
     List<Task> getHistory();
 
-    HashMap<Integer, SubTask> getAllSubTasks();
+    Map<Integer, SubTask> getAllSubTasks();
 
-    HashMap<Integer, Task> getAllTasks();
+    Map<Integer, Task> getAllTasks();
 
-    HashMap<Integer, Epic> getAllEpics();
+    Map<Integer, Epic> getAllEpics();
 
     Task createTask(String name, String description);
 
