@@ -36,14 +36,14 @@ class InMemoryTaskManagerTest {
 
     @Test
     void shouldBeEqualsTaskAndTaskCreatedByManager() {
-        int id = 1;
         String name = "TestTask";
         String description = "Test Task Description";
-        Task task = new Task(id, name, description);
 
         Task taskResponse = manager.createTask(name, description);
 
-        assertEquals(task, taskResponse, "Задачи не совпадают");
+        assertNotEquals(taskResponse.getId(), 0, "Id Задачи равен нулю");
+        assertEquals(taskResponse.getName(), name, "Имена Задачи не совпадают");
+        assertEquals(taskResponse.getDescription(), description, "Описания Задачи не совпадают");
         assertTrue(manager.getAllTasks().containsValue(taskResponse), "Задачи нет в списке созданных");
     }
 
@@ -67,14 +67,13 @@ class InMemoryTaskManagerTest {
 
     @Test
     void shouldBeEqualsEpicAndEpicCreatedByManager() {
-        int id = 1;
         String name = "Test Epic";
         String description = "Test Epic Description";
-        Epic epic = new Epic(id, name, description);
-
         Epic epicResponse = manager.createEpic(name, description);
 
-        assertEquals(epicResponse, epic, "Эпики не совпадают");
+        assertNotEquals(epicResponse.getId(), 0 ,"Id Эпика равен нулю");
+        assertEquals(epicResponse.getName(), name, " Имена Эпика не совпадают");
+        assertEquals(epicResponse.getDescription(), description, "Описания Эпика не совпадают");
         assertTrue(manager.getAllEpics().containsValue(epicResponse), "Эпика нет в списке созданных");
     }
 
@@ -88,7 +87,9 @@ class InMemoryTaskManagerTest {
 
         taskResponse = manager.updateTask(task);
 
-        assertEquals(taskResponse, task, "Задача не равны");
+        assertEquals(taskResponse.getName(), task.getName(), "Имена Задачи не равны");
+        assertEquals(taskResponse.getDescription(), task.getDescription(), "Описания Задачи не совпадают");
+        assertNotEquals(taskResponse.getId(), 0, "Id Эпика равен нулю");
     }
 
     @Test
