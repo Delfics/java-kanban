@@ -2,9 +2,12 @@ package service;
 
 import model.Task;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
- class Node<Task> {
+class Node<Task> {
     Task task;
     Node<Task> next;
     Node<Task> prev;
@@ -17,27 +20,24 @@ import java.util.*;
 }
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final static Map<Integer, Node<Task>> nodeMap = new HashMap<>();
+    final static Map<Integer, Node<Task>> nodeMap = new HashMap<>();
 
     Node<Task> first;
     Node<Task> last;
 
     private final ArrayList<Task> historyTasks = new ArrayList<>();
 
-
-    public Map<Integer, Node<Task>> getNodeMap() {
-        return nodeMap;
-    }
     @Override
     public void add(Task task) {
         Node<Task> taskNode = nodeMap.get(task.getId());
-        if(taskNode == null) {
+        if (taskNode == null) {
             linkLast(task);
         } else {
             removeNode(taskNode);
             linkLast(task);
         }
     }
+
     public void linkLast(Task task) {
         final Node<Task> l = last;
         final Node<Task> newNode = new Node<>(l, task, null);
@@ -51,7 +51,8 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    public ArrayList<Task> getTasks() {
+    public List<Task> getTasks() {
+        List <Task> historyTasks = new ArrayList<>();
         for (Node<Task> node : nodeMap.values()) {
             historyTasks.add(node.task);
         }
@@ -70,16 +71,11 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<Task> getHistory() {
+        List <Task> historyTasks = new ArrayList<>();
         System.out.println("История просмотров задач");
         for (Node<Task> node : nodeMap.values()) {
             historyTasks.add(node.task);
         }
         return historyTasks;
-    }
-
-    public void nodeMapContain() {
-        for(Node<Task> node : nodeMap.values()) {
-            System.out.println(node.task);
-        }
     }
 }
