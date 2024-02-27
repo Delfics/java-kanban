@@ -1,24 +1,25 @@
 package service;
 
 import model.Task;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static service.InMemoryHistoryManager.nodeMap;
 
 class InMemoryHistoryManagerTest {
     private final InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
     private final TaskManager taskManager = Managers.getDefault();
 
+    @BeforeEach
     @Test
-    @DisplayName("На размер истории")
-    void shouldHistoryMustBeUnlimitedSize() {
-        int size = 1000;
-        for (int i = 0; i < size; i++) {
-            historyManager.linkLast(new Task(i, "Name " + i, "Task" + i));
-        }
-        assertEquals(size, historyManager.getHistory().size(), "Размер истории должен быть равен size");
+    void createNew() {
+        nodeMap = new HashMap<>();
     }
 
     @Test
@@ -42,11 +43,11 @@ class InMemoryHistoryManagerTest {
 
         historyManager.linkLast(task1);
 
-        Node<Task> taskNode = InMemoryHistoryManager.nodeMap.get(task1.getId());
+        Node<Task> taskNode = nodeMap.get(task1.getId());
         assertEquals(task1, taskNode.task, "Добавление, в Связном списке Node содержит Таску");
 
         historyManager.removeNode(taskNode);
-        assertNotEquals(task1, InMemoryHistoryManager.nodeMap.get(taskNode),
+        assertNotEquals(task1, nodeMap.get(taskNode),
                 "Удаление, Node Не Содержит таску в Связном списке");
     }
 
@@ -56,9 +57,19 @@ class InMemoryHistoryManagerTest {
         Task task1 = taskManager.createTask("Name " + 1, "Task" + 1);
 
         historyManager.add(task1);
-        assertEquals(task1, historyManager.getTasks(), "Добавление работает корректно");
+        assertEquals(task1, historyManager.getTasks().get(0), "Добавление работает корректно");
 
         historyManager.remove(task1.getId());
-        assertNotEquals(task1, historyManager.getHistory(), "Удаление работает корректно");
+        assertEquals(task1, historyManager.getHistory().get(0), "Удаление работает корректно");
+    }
+
+    @Test
+    @DisplayName("На размер истории")
+    void shouldHistoryMustBeUnlimitedSize() {
+        int size = 1000;
+        for (int i = 0; i < size; i++) {
+            historyManager.linkLast(new Task(i, "Name " + i, "Task" + i));
+        }
+        assertEquals(size, historyManager.getHistory().size(), "Размер истории должен быть равен size");
     }
 }

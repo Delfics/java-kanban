@@ -20,7 +20,7 @@ class Node<Task> {
 }
 
 public class InMemoryHistoryManager implements HistoryManager {
-    final static Map<Integer, Node<Task>> nodeMap = new HashMap<>();
+    static Map<Integer, Node<Task>> nodeMap = new HashMap<>();
 
     Node<Task> first;
     Node<Task> last;
