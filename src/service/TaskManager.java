@@ -57,4 +57,6 @@ public interface TaskManager {
     void showAllSubtasks();
 
     void calculateStatus(Status status, int epicId);
+
+    HistoryManager getInMemoryHistoryManager();
 }

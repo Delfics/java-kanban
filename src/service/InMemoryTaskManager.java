@@ -15,13 +15,16 @@ public class InMemoryTaskManager implements TaskManager {
     private HashMap<Integer, SubTask> subTasks = new HashMap<>();
     private HashMap<Integer, Epic> epics = new HashMap<>();
 
-    private final InMemoryHistoryManager manager = new InMemoryHistoryManager();
-
+    private final HistoryManager manager = Managers.getDefaultHistory();
 
     private static int sequence = 1;
 
     private int nextId() {
         return sequence++;
+    }
+
+    public HistoryManager getInMemoryHistoryManager() {
+        return manager;
     }
 
     @Override

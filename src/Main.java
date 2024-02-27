@@ -71,11 +71,11 @@ public class Main {
         taskManager.getHistory();*/
 
         System.out.println("Проверка 4: Проверяю новые добавления");
-        InMemoryHistoryManager manager = new InMemoryHistoryManager();
         taskManager.getTaskById(task1.getId());
         taskManager.getSubTaskById(subTask3.getId());
         taskManager.getTaskById(task1.getId());
+        taskManager.getSubTaskById(subTask3.getId());
 
-        System.out.println("Проверка getTasks " + manager.getTasks());
+        System.out.println("Проверка getTasks " + taskManager.getInMemoryHistoryManager().getHistory());
     }
 }

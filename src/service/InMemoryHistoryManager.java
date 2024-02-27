@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    static Map<Integer, Node> nodeMap = new HashMap<>();
+    private Map<Integer, Node> nodeMap = new HashMap<>();
 
     Node first;
     Node last;
 
-    private final ArrayList<Task> historyTasks = new ArrayList<>();
+    private ArrayList<Task> historyTasks = new ArrayList<>();
 
     static class Node {
         Task task;
@@ -25,6 +25,10 @@ public class InMemoryHistoryManager implements HistoryManager {
             this.next = next;
             this.prev = prev;
         }
+    }
+
+    public Map<Integer, Node> getNodeMap() {
+        return nodeMap;
     }
 
     @Override
