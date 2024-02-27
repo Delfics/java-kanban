@@ -6,7 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -43,11 +42,11 @@ class InMemoryHistoryManagerTest {
 
         historyManager.linkLast(task1);
 
-        Node<Task> taskNode = nodeMap.get(task1.getId());
+        InMemoryHistoryManager.Node<Task> taskNode = nodeMap.get(task1.getId());
         assertEquals(task1, taskNode.task, "Добавление, в Связном списке Node содержит Таску");
 
         historyManager.removeNode(taskNode);
-        assertNotEquals(task1, nodeMap.get(taskNode),
+        assertNotEquals(task1, nodeMap.get(taskNode.task),
                 "Удаление, Node Не Содержит таску в Связном списке");
     }
 

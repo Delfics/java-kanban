@@ -7,25 +7,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class Node<Task> {
-    Task task;
-    Node<Task> next;
-    Node<Task> prev;
-
-    Node(Node<Task> prev, Task task, Node<Task> next) {
-        this.task = task;
-        this.next = next;
-        this.prev = prev;
-    }
-}
-
 public class InMemoryHistoryManager implements HistoryManager {
     static Map<Integer, Node<Task>> nodeMap = new HashMap<>();
 
     Node<Task> first;
     Node<Task> last;
 
-    private final ArrayList<Task> historyTasks = new ArrayList<>();
+    private  ArrayList<Task> historyTasks = new ArrayList<>();
+
+     static class Node<Task> {
+        Task task;
+        Node<Task> next;
+        Node<Task> prev;
+
+        Node(Node<Task> prev, Task task, Node<Task> next) {
+            this.task = task;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
 
     @Override
     public void add(Task task) {
