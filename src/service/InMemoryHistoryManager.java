@@ -8,19 +8,19 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    static Map<Integer, Node<Task>> nodeMap = new HashMap<>();
+    static Map<Integer, Node> nodeMap = new HashMap<>();
 
-    Node<Task> first;
-    Node<Task> last;
+    Node first;
+    Node last;
 
-    private  ArrayList<Task> historyTasks = new ArrayList<>();
+    private final ArrayList<Task> historyTasks = new ArrayList<>();
 
-     static class Node<Task> {
+    static class Node {
         Task task;
-        Node<Task> next;
-        Node<Task> prev;
+        Node next;
+        Node prev;
 
-        Node(Node<Task> prev, Task task, Node<Task> next) {
+        Node(Node prev, Task task, Node next) {
             this.task = task;
             this.next = next;
             this.prev = prev;
@@ -29,7 +29,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        Node<Task> taskNode = nodeMap.get(task.getId());
+        Node taskNode = nodeMap.get(task.getId());
         if (taskNode == null) {
             linkLast(task);
         } else {
@@ -39,8 +39,8 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     public void linkLast(Task task) {
-        final Node<Task> l = last;
-        final Node<Task> newNode = new Node<>(l, task, null);
+        final Node l = last;
+        final Node newNode = new Node(l, task, null);
         last = newNode;
         if (l == null) {
             first = newNode;
@@ -52,28 +52,28 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     public List<Task> getTasks() {
-        List <Task> historyTasks = new ArrayList<>();
-        for (Node<Task> node : nodeMap.values()) {
+        List<Task> historyTasks = new ArrayList<>();
+        for (Node node : nodeMap.values()) {
             historyTasks.add(node.task);
         }
         return historyTasks;
     }
 
-    public void removeNode(Node<Task> node) {
+    public void removeNode(Node node) {
         nodeMap.remove(node);
     }
 
     @Override
     public void remove(int id) {
-        Node<Task> taskNode = nodeMap.get(id);
+        Node taskNode = nodeMap.get(id);
         historyTasks.remove(taskNode);
     }
 
     @Override
     public List<Task> getHistory() {
-        List <Task> historyTasks = new ArrayList<>();
+        List<Task> historyTasks = new ArrayList<>();
         System.out.println("История просмотров задач");
-        for (Node<Task> node : nodeMap.values()) {
+        for (Node node : nodeMap.values()) {
             historyTasks.add(node.task);
         }
         return historyTasks;

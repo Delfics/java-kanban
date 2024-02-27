@@ -42,7 +42,7 @@ class InMemoryHistoryManagerTest {
 
         historyManager.linkLast(task1);
 
-        InMemoryHistoryManager.Node<Task> taskNode = nodeMap.get(task1.getId());
+        InMemoryHistoryManager.Node taskNode = nodeMap.get(task1.getId());
         assertEquals(task1, taskNode.task, "Добавление, в Связном списке Node содержит Таску");
 
         historyManager.removeNode(taskNode);
