@@ -4,7 +4,6 @@ import model.Epic;
 import model.Status;
 import model.SubTask;
 import model.Task;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,14 +35,14 @@ class InMemoryTaskManagerTest {
 
     @Test
     void shouldBeEqualsTaskAndTaskCreatedByManager() {
-        int id = 1;
         String name = "TestTask";
         String description = "Test Task Description";
-        Task task = new Task(id, name, description);
 
         Task taskResponse = manager.createTask(name, description);
 
-        assertEquals(task, taskResponse, "Задачи не совпадают");
+        assertNotEquals(taskResponse.getId(), 0, "Id Задачи равен нулю");
+        assertEquals(taskResponse.getName(), name, "Имена Задачи не совпадают");
+        assertEquals(taskResponse.getDescription(), description, "Описания Задачи не совпадают");
         assertTrue(manager.getAllTasks().containsValue(taskResponse), "Задачи нет в списке созданных");
     }
 
@@ -67,14 +66,13 @@ class InMemoryTaskManagerTest {
 
     @Test
     void shouldBeEqualsEpicAndEpicCreatedByManager() {
-        int id = 1;
         String name = "Test Epic";
         String description = "Test Epic Description";
-        Epic epic = new Epic(id, name, description);
-
         Epic epicResponse = manager.createEpic(name, description);
 
-        assertEquals(epicResponse, epic, "Эпики не совпадают");
+        assertNotEquals(epicResponse.getId(), 0, "Id Эпика равен нулю");
+        assertEquals(epicResponse.getName(), name, " Имена Эпика не совпадают");
+        assertEquals(epicResponse.getDescription(), description, "Описания Эпика не совпадают");
         assertTrue(manager.getAllEpics().containsValue(epicResponse), "Эпика нет в списке созданных");
     }
 
@@ -88,7 +86,9 @@ class InMemoryTaskManagerTest {
 
         taskResponse = manager.updateTask(task);
 
-        assertEquals(taskResponse, task, "Задача не равны");
+        assertEquals(taskResponse.getName(), task.getName(), "Имена Задачи не равны");
+        assertEquals(taskResponse.getDescription(), task.getDescription(), "Описания Задачи не совпадают");
+        assertNotEquals(taskResponse.getId(), 0, "Id Эпика равен нулю");
     }
 
     @Test
@@ -156,55 +156,6 @@ class InMemoryTaskManagerTest {
         subTask1.setStatus(Status.DONE);
         manager.updateSubTask(subTask1);
         assertEquals(epicResponse.getStatus(), Status.DONE, "Статусы не равны");
-    }
-
-    @Test
-    @DisplayName("Мы напрямую работаем с InMemoryTaskManager, а не с HistoryManager." +
-            "Поэтому вся логика работы HistoryManager находится здесь в InMemoryTaskManager. ")
-    void shouldCorrectlyCalculateHistoryIfGetTasksByIds() {
-        String name = "Name";
-        String desc = "Desc";
-        int maxSize = 10;
-        Task task1 = manager.createTask(name, desc);
-        manager.getTaskById(task1.getId());
-        Task task2 = manager.createTask(name + 1, desc + 1);
-        manager.getTaskById(task2.getId());
-        Task task3 = manager.createTask(name + 2, desc + 2);
-        manager.getTaskById(task3.getId());
-        Task task4 = manager.createTask(name + 3, desc + 3);
-        manager.getTaskById(task4.getId());
-        Task task5 = manager.createTask(name + 4, desc + 4);
-        manager.getTaskById(task5.getId());
-        Task task6 = manager.createTask(name + 5, desc + 5);
-        manager.getTaskById(task6.getId());
-        Task task7 = manager.createTask(name + 6, desc + 6);
-        manager.getTaskById(task7.getId());
-        Task task8 = manager.createTask(name + 7, desc + 7);
-        manager.getTaskById(task8.getId());
-        Task task9 = manager.createTask(name + 8, desc + 8);
-        manager.getTaskById(task9.getId());
-        Task task10 = manager.createTask(name + 9, desc + 9);
-        manager.getTaskById(task10.getId());
-
-        assertEquals(manager.getHistory().size(), maxSize, "Размеры истории не совпадают");
-        assertEquals(manager.getHistory().get(0), task1, "Первая таска истории не совпадает с реальной");
-        assertEquals(manager.getHistory().get(9), task10, "Последняя таска истории не совпадает с реальной");
-
-        Epic epic11 = manager.createEpic(name + 10, desc + 10);
-        manager.getEpicById(epic11.getId());
-
-        assertEquals(manager.getHistory().size(), maxSize, "Размеры истории не совпадают");
-        assertEquals(manager.getHistory().get(0), task2, "Первая таска истории не совпадает с реальной");
-        assertEquals(manager.getHistory().get(9), epic11, "Последняя таска истории не совпадает с реальной");
-
-        //убедитесь, что задачи, добавляемые в HistoryManager, сохраняют предыдущую версию задачи и её данных.
-        Task task12 = new Task(task3.getId(), name + 11, desc + 11);
-        manager.updateTask(task12);
-        manager.getTaskById(task12.getId());
-
-        assertEquals(manager.getHistory().size(), maxSize, "Размеры истории не совпадают");
-        assertEquals(manager.getHistory().get(0), task3, "Первая таска истории не совпадает с реальной");
-        assertEquals(manager.getHistory().get(9), task12, "Последняя таска истории не совпадает с реальной");
     }
 }
 

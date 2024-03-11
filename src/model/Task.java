@@ -60,7 +60,8 @@ public class Task {
             return false;
         }
         Task otherTask = (Task) o;
-        return Objects.equals(name, otherTask.name) &&
+        return  (id == otherTask.getId()) &&
+                Objects.equals(name, otherTask.name) &&
                 Objects.equals(status, otherTask.status) &&
                 Objects.equals(description, otherTask.description);
     }

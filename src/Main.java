@@ -2,8 +2,7 @@ import model.Epic;
 import model.Status;
 import model.SubTask;
 import model.Task;
-import service.Managers;
-import service.TaskManager;
+import service.*;
 
 
 public class Main {
@@ -57,7 +56,7 @@ public class Main {
         taskManager.showAllSubtasks();
         System.out.println("Проверка 3 окончена.");
 
-        taskManager.getSubTaskById(subTask7.getId());
+/*        taskManager.getSubTaskById(subTask7.getId());
         taskManager.getTaskById(task1.getId());
         taskManager.getTaskById(task1.getId());
         taskManager.getTaskById(task1.getId());
@@ -69,6 +68,14 @@ public class Main {
         taskManager.getTaskById(task1.getId());
         taskManager.getEpicById(epic1.getId());
         taskManager.getSubTaskById(subTask3.getId());
-        taskManager.getHistory();
+        taskManager.getHistory();*/
+
+        System.out.println("Проверка 4: Проверяю новые добавления");
+        taskManager.getTaskById(task1.getId());
+        taskManager.getSubTaskById(subTask3.getId());
+        taskManager.getTaskById(task1.getId());
+        taskManager.getSubTaskById(subTask3.getId());
+
+        System.out.println("Проверка getTasks " + taskManager.getInMemoryHistoryManager().getHistory());
     }
 }
