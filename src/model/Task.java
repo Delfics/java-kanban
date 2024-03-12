@@ -70,4 +70,12 @@ public class Task {
     public int hashCode() {
         return Objects.hash(id, name, status, description);
     }
+
+    public TasksType taskType() {
+        return TasksType.TASK;
+    }
+
+    public Epic getEpic() {
+        return null;
+    }
 }

@@ -40,4 +40,8 @@ public class SubTask extends Task {
     public int hashCode() {
         return Objects.hash(epicId);
     }
+
+    public TasksType taskType() {
+        return TasksType.SUBTASK;
+    }
 }
