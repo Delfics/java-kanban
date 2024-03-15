@@ -41,7 +41,8 @@ public class SubTask extends Task {
         return Objects.hash(epicId);
     }
 
-    public TasksType taskType() {
+
+    public TasksType getSubTaskType() {
         return TasksType.SUBTASK;
     }
 }

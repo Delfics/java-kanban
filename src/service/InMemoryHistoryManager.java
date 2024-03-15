@@ -8,12 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private Map<Integer, Node> nodeMap = new HashMap<>();
+    private final Map<Integer, Node> nodeMap = new HashMap<>();
 
     Node first;
     Node last;
 
-    private ArrayList<Task> historyTasks = new ArrayList<>();
 
     static class Node {
         Task task;
@@ -69,14 +68,12 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        Node taskNode = nodeMap.get(id);
-        historyTasks.remove(taskNode);
+        nodeMap.remove(id);
     }
 
     @Override
     public List<Task> getHistory() {
         List<Task> historyTasks = new ArrayList<>();
-        System.out.println("История просмотров задач");
         for (Node node : nodeMap.values()) {
             historyTasks.add(node.task);
         }

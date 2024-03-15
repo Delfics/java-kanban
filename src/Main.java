@@ -2,7 +2,11 @@ import model.Epic;
 import model.Status;
 import model.SubTask;
 import model.Task;
-import service.*;
+import service.FileBackedTaskManager;
+import service.Managers;
+import service.TaskManager;
+
+import java.io.File;
 
 
 public class Main {
@@ -73,9 +77,24 @@ public class Main {
         System.out.println("Проверка 4: Проверяю новые добавления");
         taskManager.getTaskById(task1.getId());
         taskManager.getSubTaskById(subTask3.getId());
-        taskManager.getTaskById(task1.getId());
-        taskManager.getSubTaskById(subTask3.getId());
+        taskManager.getEpicById(epic2.getId());
 
         System.out.println("Проверка getTasks " + taskManager.getInMemoryHistoryManager().getHistory());
+
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(
+                new File("C:\\Users\\USER\\IdeaProjects\\java-kanban\\resources\\task"));
+
+        Epic epic = fileBackedTaskManager.createEpic("Проверка Эпика", "Сохранился ли в файл эпик");
+        fileBackedTaskManager.createEpic("Проверка Эпика", "Сохранился ли в файл эпик");
+        fileBackedTaskManager.createEpic("Проверка Эпика", "Сохранился ли в файл эпик");
+        SubTask subTask = fileBackedTaskManager.createSubTask("Проверка СабТаски", "Сохарнился ли файл", epic.getId());
+        fileBackedTaskManager.getSubTaskById(subTask.getId());
+       /* System.out.println("Проверка FileBackedTaskManager historyToString: \n" + FileBackedTaskManager.historyToString
+                (taskManager.getInMemoryHistoryManager()));
+
+        System.out.println("Проверка FileBackedTaskManager historyFromString: \n" +
+                FileBackedTaskManager.historyFromString(FileBackedTaskManager.historyToString
+                        (taskManager.getInMemoryHistoryManager())));*/
+
     }
 }
