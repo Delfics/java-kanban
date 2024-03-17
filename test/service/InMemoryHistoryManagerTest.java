@@ -4,8 +4,7 @@ import model.Task;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 class InMemoryHistoryManagerTest {
@@ -50,7 +49,7 @@ class InMemoryHistoryManagerTest {
         assertEquals(task1, historyManager.getTasks().get(0), "Добавление работает корректно");
 
         historyManager.remove(task1.getId());
-        assertEquals(task1, historyManager.getHistory().get(0), "Удаление работает корректно");
+        assertTrue(historyManager.getHistory().size() == 0, "Удаление работает корректно");
     }
 
     @Test
