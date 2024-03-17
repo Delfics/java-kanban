@@ -18,7 +18,7 @@ class FileBackedTaskManagerTest {
     void shouldLoadExistEmptyFileAtCreateFileBackedTaskManager() throws IOException {
         int lengthZero = 0;
 
-        File dir = new File("src/test/resources");
+        File dir = new File("test/resources");
         File tempFile = File.createTempFile("File", "New", dir);
 
         FileBackedTaskManager fileBackedTaskManager = TaskManagerFactory.createFileBackedTaskManager(tempFile);
@@ -35,7 +35,7 @@ class FileBackedTaskManagerTest {
     void shouldCreateAndSaveEmptyFileAtCreateFileBackedTaskManager() throws IOException {
         int lengthZero = 0;
 
-        File file = new File("src/test/resources/test_not_exist_file.txt");
+        File file = new File("test/resources/test_not_exist_file.txt");
         FileBackedTaskManager fileBackedTaskManager = TaskManagerFactory.createFileBackedTaskManager(file);
         File autoSave = fileBackedTaskManager.getAutoSave();
 
@@ -49,7 +49,7 @@ class FileBackedTaskManagerTest {
     @Test
     void shouldSaveTasksInExistFile() throws IOException {
         int lengthZero = 0;
-        File file = new File("src/test/resources/test_not_exist_file.txt");
+        File file = new File("test/resources/test_not_exist_file.txt");
         FileBackedTaskManager fileBackedTaskManager = TaskManagerFactory.createFileBackedTaskManager(file);
         File autoSave = fileBackedTaskManager.getAutoSave();
 
@@ -75,7 +75,7 @@ class FileBackedTaskManagerTest {
         int taskInFile = 1;
         int historyFile = 2;
 
-        File file = new File("src/test/resources/task.txt");
+        File file = new File("test/resources/task.txt");
         FileBackedTaskManager fileBackedTaskManager = TaskManagerFactory.createFileBackedTaskManager(file);
         File autoSave = fileBackedTaskManager.getAutoSave();
 
