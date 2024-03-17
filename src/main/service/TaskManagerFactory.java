@@ -28,14 +28,18 @@ public class TaskManagerFactory {
     }
 
     public static FileBackedTaskManager createFileBackedTaskManager(File file) {
-        if (file.length() == 0) {
-            return new FileBackedTaskManager(file);
-//        } else if(!file.exists()) {
-//            file.createNewFile();
-//            return new FileBackedTaskManager(file);
-//        }
-        } else {
-            return loadFromFile(file);
+        try {
+            if (file.length() == 0) {
+                if (file.exists()) {
+                    return new FileBackedTaskManager(file);
+                }
+                file.createNewFile();
+                return new FileBackedTaskManager(file);
+            } else {
+                return loadFromFile(file);
+            }
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }
