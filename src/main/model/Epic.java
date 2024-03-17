@@ -52,8 +52,8 @@ public class Epic extends Task {
         return Objects.hash(subTaskIds);
     }
 
-
-    public TasksType getEpicType() {
+    @Override
+    public TasksType getTaskType() {
         return TasksType.EPIC;
     }
 }
