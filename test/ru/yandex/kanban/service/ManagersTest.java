@@ -1,10 +1,10 @@
-package service;
+package ru.yandex.kanban.service;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static service.Managers.getDefault;
-import static service.Managers.getDefaultHistory;
+import static ru.yandex.kanban.service.Managers.getDefault;
+import static ru.yandex.kanban.service.Managers.getDefaultHistory;
 
 class ManagersTest {
 

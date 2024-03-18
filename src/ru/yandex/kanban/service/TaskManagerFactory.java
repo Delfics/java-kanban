@@ -1,4 +1,4 @@
-package service;
+package ru.yandex.kanban.service;
 
 import java.io.File;
 import java.io.IOException;

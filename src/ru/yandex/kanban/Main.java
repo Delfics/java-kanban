@@ -1,11 +1,13 @@
-import model.Epic;
-import model.Status;
-import model.SubTask;
-import model.Task;
-import service.FileBackedTaskManager;
-import service.Managers;
-import service.TaskManager;
-import service.TaskManagerFactory;
+package ru.yandex.kanban;
+
+import ru.yandex.kanban.model.Epic;
+import ru.yandex.kanban.model.Status;
+import ru.yandex.kanban.model.SubTask;
+import ru.yandex.kanban.model.Task;
+import ru.yandex.kanban.service.FileBackedTaskManager;
+import ru.yandex.kanban.service.Managers;
+import ru.yandex.kanban.service.TaskManager;
+import ru.yandex.kanban.service.TaskManagerFactory;
 
 import java.io.File;
 

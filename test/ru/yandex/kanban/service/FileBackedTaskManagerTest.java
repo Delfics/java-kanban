@@ -1,8 +1,9 @@
-package service;
+package ru.yandex.kanban.service;
 
-import model.Epic;
-import model.SubTask;
-import model.Task;
+import ru.yandex.kanban.model.Epic;
+import ru.yandex.kanban.model.Status;
+import ru.yandex.kanban.model.SubTask;
+import ru.yandex.kanban.model.Task;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -22,7 +23,7 @@ class FileBackedTaskManagerTest {
         File tempFile = File.createTempFile("File", "New", dir);
 
         FileBackedTaskManager fileBackedTaskManager = TaskManagerFactory.createFileBackedTaskManager(tempFile);
-        File autoSave = fileBackedTaskManager.getAutoSave();
+        File autoSave = fileBackedTaskManager.getFile();
 
         assertTrue(autoSave.exists(), "Проверили что файл создан");
         assertEquals(lengthZero, autoSave.length(), "Сохранили пустой файл и проверили его длину");
@@ -37,7 +38,7 @@ class FileBackedTaskManagerTest {
 
         File file = new File("test/resources/test_not_exist_file.txt");
         FileBackedTaskManager fileBackedTaskManager = TaskManagerFactory.createFileBackedTaskManager(file);
-        File autoSave = fileBackedTaskManager.getAutoSave();
+        File autoSave = fileBackedTaskManager.getFile();
 
         assertTrue(autoSave.exists(), "Проверили что файл создан");
         assertEquals(lengthZero, autoSave.length(), "Сохранили пустой файл и проверили его длину");
@@ -51,7 +52,7 @@ class FileBackedTaskManagerTest {
         int lengthZero = 0;
         File file = new File("test/resources/test_not_exist_file.txt");
         FileBackedTaskManager fileBackedTaskManager = TaskManagerFactory.createFileBackedTaskManager(file);
-        File autoSave = fileBackedTaskManager.getAutoSave();
+        File autoSave = fileBackedTaskManager.getFile();
 
         assertTrue(autoSave.exists(), "Проверили что файл создан");
         assertEquals(lengthZero, autoSave.length(), "Сохранили пустой файл и проверили его длину");
@@ -77,7 +78,7 @@ class FileBackedTaskManagerTest {
 
         File file = new File("test/resources/task.txt");
         FileBackedTaskManager fileBackedTaskManager = TaskManagerFactory.createFileBackedTaskManager(file);
-        File autoSave = fileBackedTaskManager.getAutoSave();
+        File autoSave = fileBackedTaskManager.getFile();
 
         assertTrue(autoSave.exists(), "Проверили что файл создан");
         assertTrue(autoSave.length() > lengthZero, "Загрузили файл и проверили его длину");
@@ -96,5 +97,46 @@ class FileBackedTaskManagerTest {
         assertEquals(sizeEpics, epicsInFile, "Равны количеству эпиков");
         assertEquals(sizeSubTasks, subtaskInFile, "Равны количеству сабтасок");
         assertEquals(sizeHistory, historyFile, "Равны количству историй");
+    }
+
+    @Test
+    void test() throws IOException {
+        File dir = new File("test/resources");
+        File tempFile = File.createTempFile("File", "New", dir);
+        FileBackedTaskManager fileBackedTaskManager = TaskManagerFactory.createFileBackedTaskManager(tempFile);
+
+        Task task = fileBackedTaskManager.createTask("Таска", "Описание Таски");
+        Epic epic = fileBackedTaskManager.createEpic("Эпик", "Описание Эпика");
+        SubTask subTask = fileBackedTaskManager.createSubTask("СабТаска", "Описание Сабтаски",
+                epic.getId());
+        task.setStatus(Status.IN_PROGRESS);
+        subTask.setStatus(Status.IN_PROGRESS);
+        fileBackedTaskManager.updateTask(task);
+        fileBackedTaskManager.updateSubTask(subTask);
+
+        fileBackedTaskManager.getTaskById(task.getId());
+        fileBackedTaskManager.getSubTaskById(subTask.getId());
+        fileBackedTaskManager.getEpicById(epic.getId());
+        fileBackedTaskManager.getHistory();
+
+        FileBackedTaskManager fileBackedTaskManager1 = TaskManagerFactory.createFileBackedTaskManager
+                (fileBackedTaskManager.getFile());
+
+        assertEquals(fileBackedTaskManager.getAllTasks(),fileBackedTaskManager1.getAllTasks(),
+                "Сравнили список тасок у менеджера Создателя файла и у менеджера Загрузчика файла");
+        assertEquals(fileBackedTaskManager.getAllSubTasks(),fileBackedTaskManager1.getAllSubTasks(),
+                "Сравнили список сабтасок у менеджера Создателя файла и у менеджера Загрузчика файла ");
+        assertEquals(fileBackedTaskManager.getAllEpics(),fileBackedTaskManager1.getAllEpics(),
+                "Сравнили список епиков у менеджера Создателя файла и у менеджера Загрузчика файла");
+        assertEquals(fileBackedTaskManager.getHistory(),fileBackedTaskManager1.getHistory(),
+                "Сравнили список историй у менеджера Создателя файла и у менеджера Загрузчика файла");
+
+        Task task1 = fileBackedTaskManager.createTask("Проверка", "Некст айди");
+        Task task2 = fileBackedTaskManager1.createTask("Проверка", "Некст айди");
+
+        assertEquals(task1,task2);
+
+        Path path = tempFile.toPath();
+        Files.delete(path);
     }
 }

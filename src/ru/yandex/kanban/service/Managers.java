@@ -1,4 +1,4 @@
-package service;
+package ru.yandex.kanban.service;
 
 public class Managers {
     public static TaskManager getDefault() {

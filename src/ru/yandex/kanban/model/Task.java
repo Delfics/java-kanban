@@ -1,4 +1,4 @@
-package model;
+package ru.yandex.kanban.model;
 
 import java.util.Objects;
 

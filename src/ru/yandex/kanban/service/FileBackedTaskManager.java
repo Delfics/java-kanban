@@ -1,9 +1,9 @@
-package service;
+package ru.yandex.kanban.service;
 
-import model.Epic;
-import model.Status;
-import model.SubTask;
-import model.Task;
+import ru.yandex.kanban.model.Epic;
+import ru.yandex.kanban.model.Status;
+import ru.yandex.kanban.model.SubTask;
+import ru.yandex.kanban.model.Task;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,19 +11,24 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
 
-    private final File autoSave;
+    private final File file;
+
 
     public FileBackedTaskManager(File file) {
-        this.autoSave = file;
+        this.file = file;
     }
 
-    public File getAutoSave() {
-        return autoSave;
+    public File getFile() {
+        return file;
     }
 
+    private void calculateNextId(int id) {
+        if (id >= sequence) {
+           sequence = id + 1;
+        }
+    }
     @Override
     public Task createTask(String name, String description) {
         Task task = super.createTask(name, description);
@@ -126,7 +131,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     public void save() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(autoSave, StandardCharsets.UTF_8))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
             writer.write("id,type,name,status,description,epic,\n");
             for (Task task : getAllTasks().values()) {
                 writer.write(toString(task));
@@ -140,7 +145,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             writer.write("\n");
             writer.write(HistoryMapper.historyToString(getInMemoryHistoryManager(), this));
         } catch (IOException e) {
-            throw new RuntimeException("Ошибка в файле: " + autoSave.getAbsolutePath() + " " + autoSave.getName(), e);
+            throw new RuntimeException("Ошибка в файле: " + file.getAbsolutePath() + " " + file.getName(), e);
         }
     }
 
@@ -161,36 +166,39 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     public void fromStringList(List<String> list) {
-        try {
-            for (String line : list) {
-                if (line.isEmpty()) {
-                    continue;
-                }
-                String[] split = line.split(",");
-                for (int i = 0; i < 2; i++) {
-                    if (split[1].equals("TASK")) {
-                        Task task = new Task(Integer.parseInt(split[0]), split[2], split[4]);
-                        task.setStatus(Status.valueOf(split[3]));
-                        this.getAllTasks().put(task.getId(), task);
-                    } else if (split[1].equals("SUBTASK")) {
-                        SubTask subTask = new SubTask(Integer.parseInt(split[0]), split[2], split[4],
-                                Integer.parseInt(split[5]));
-                        subTask.setStatus(Status.valueOf(split[3]));
-                        this.getAllSubTasks().put(subTask.getId(), subTask);
-                    } else if (split[1].equals("EPIC")) {
-                        Epic epic = new Epic(Integer.parseInt(split[0]), split[2], split[4]);
-                        epic.setStatus(Status.valueOf(split[3]));
-                        for (SubTask subtask : this.getAllSubTasks().values()) {
-                            if (subtask.getEpicId() == epic.getId()) {
-                                epic.getSubTasksListInEpic().add(subtask.getEpicId());
-                            }
+        for (String line : list) {
+            if (line.isEmpty()) {
+                continue;
+            }
+            String[] split = line.split(",");
+            for (int i = 0; i < 2; i++) {
+                if (!split[0].equals("id")) {
+                    calculateNextId(Integer.parseInt(split[0]));
+                    switch (split[1]) {
+                        case "TASK" -> {
+                            Task task = new Task(Integer.parseInt(split[0]), split[2], split[4]);
+                            task.setStatus(Status.valueOf(split[3]));
+                            this.getAllTasks().put(task.getId(), task);
                         }
-                        this.getAllEpics().put(epic.getId(), epic);
+                        case "SUBTASK" -> {
+                            SubTask subTask = new SubTask(Integer.parseInt(split[0]), split[2], split[4],
+                                    Integer.parseInt(split[5]));
+                            subTask.setStatus(Status.valueOf(split[3]));
+                            this.getAllSubTasks().put(subTask.getId(), subTask);
+                        }
+                        case "EPIC" -> {
+                            Epic epic = new Epic(Integer.parseInt(split[0]), split[2], split[4]);
+                            epic.setStatus(Status.valueOf(split[3]));
+                            for (SubTask subtask : this.getAllSubTasks().values()) {
+                                if (subtask.getEpicId() == epic.getId()) {
+                                    epic.getSubTasksListInEpic().add(subtask.getId());
+                                }
+                            }
+                            this.getAllEpics().put(epic.getId(), epic);
+                        }
                     }
                 }
             }
-        } catch (NullPointerException e) {
-            System.out.println("Ошибка создания задачи из списка: " + e.getMessage());
         }
     }
 }

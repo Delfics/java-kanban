@@ -1,6 +1,6 @@
-package service;
+package ru.yandex.kanban.service;
 
-import model.Task;
+import ru.yandex.kanban.model.Task;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
