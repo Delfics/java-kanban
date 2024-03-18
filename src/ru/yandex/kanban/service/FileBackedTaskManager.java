@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
 
     private final File file;
@@ -26,9 +27,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     private void calculateNextId(int id) {
         if (id >= sequence) {
-           sequence = id + 1;
+            sequence = id + 1;
         }
     }
+
     @Override
     public Task createTask(String name, String description) {
         Task task = super.createTask(name, description);
