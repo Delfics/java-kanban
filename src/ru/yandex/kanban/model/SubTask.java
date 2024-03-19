@@ -1,4 +1,4 @@
-package model;
+package ru.yandex.kanban.model;
 
 import java.util.Objects;
 
@@ -18,7 +18,7 @@ public class SubTask extends Task {
     @Override
     public String toString() {
         return "Идентификатор " + super.getId() + "\nТип: Подзадача " + "\nСтатус: " + super.getStatus()
-                + "\nНазвание: " + super.getName() + "\n" + super.getDescription() + "\n";
+                + "\nНазвание: " + super.getName() + "\n" + super.getDescription() + "\n" + "id в эпике " + epicId;
     }
 
     @Override
@@ -39,5 +39,10 @@ public class SubTask extends Task {
     @Override
     public int hashCode() {
         return Objects.hash(epicId);
+    }
+
+    @Override
+    public TasksType getTaskType() {
+        return TasksType.SUBTASK;
     }
 }

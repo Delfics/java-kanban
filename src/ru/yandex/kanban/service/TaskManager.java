@@ -1,9 +1,9 @@
-package service;
+package ru.yandex.kanban.service;
 
-import model.Epic;
-import model.Status;
-import model.SubTask;
-import model.Task;
+import ru.yandex.kanban.model.Epic;
+import ru.yandex.kanban.model.Status;
+import ru.yandex.kanban.model.SubTask;
+import ru.yandex.kanban.model.Task;
 
 import java.util.List;
 import java.util.Map;

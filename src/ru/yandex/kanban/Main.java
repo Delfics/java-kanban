@@ -1,8 +1,15 @@
-import model.Epic;
-import model.Status;
-import model.SubTask;
-import model.Task;
-import service.*;
+package ru.yandex.kanban;
+
+import ru.yandex.kanban.model.Epic;
+import ru.yandex.kanban.model.Status;
+import ru.yandex.kanban.model.SubTask;
+import ru.yandex.kanban.model.Task;
+import ru.yandex.kanban.service.FileBackedTaskManager;
+import ru.yandex.kanban.service.Managers;
+import ru.yandex.kanban.service.TaskManager;
+import ru.yandex.kanban.service.TaskManagerFactory;
+
+import java.io.File;
 
 
 public class Main {
@@ -73,9 +80,41 @@ public class Main {
         System.out.println("Проверка 4: Проверяю новые добавления");
         taskManager.getTaskById(task1.getId());
         taskManager.getSubTaskById(subTask3.getId());
-        taskManager.getTaskById(task1.getId());
-        taskManager.getSubTaskById(subTask3.getId());
+        taskManager.getEpicById(epic2.getId());
 
         System.out.println("Проверка getTasks " + taskManager.getInMemoryHistoryManager().getHistory());
+
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(
+                new File("C:\\Users\\USER\\IdeaProjects\\java-kanban\\resources\\task.txt"));
+
+
+        fileBackedTaskManager.createTask("Проверка таски", "Сохранилась ли таска в файл");
+        Epic epic = fileBackedTaskManager.createEpic("Проверка Эпика", "Сохранился ли в файл эпик");
+        fileBackedTaskManager.createEpic("Проверка Эпика", "Сохранился ли в файл эпик");
+        fileBackedTaskManager.createEpic("Проверка Эпика", "Сохранился ли в файл эпик");
+        SubTask subTask = fileBackedTaskManager.createSubTask("Проверка СабТаски", "Сохарнился ли файл", epic.getId());
+        fileBackedTaskManager.getSubTaskById(subTask.getId());
+        fileBackedTaskManager.getEpicById(epic.getId());
+
+        String s = "id,type,name,status,description,epic,\n" +
+                "11,SUBTASK,Проверка СабТаски,NEW,Сохарнился ли файл,8,\n" +
+                "8,EPIC,Проверка Эпика,NEW,Сохранился ли в файл эпик,null,\n" +
+                "9,EPIC,Проверка Эпика,NEW,Сохранился ли в файл эпик,null,\n" +
+                "10,EPIC,Проверка Эпика,NEW,Сохранился ли в файл эпик,null,\n" +
+                "\n" +
+                "8,11,";
+
+        /*   System.out.println("Проверка тасок " + fileBackedTaskManager.fromString());*/
+
+
+        System.out.println("Проверка на загрузку из файла : \n");
+
+
+        FileBackedTaskManager fileBackedTaskManager1 = TaskManagerFactory.createFileBackedTaskManager(new
+                File("C:\\Users\\USER\\IdeaProjects\\java-kanban\\resources\\task.txt"));
+        System.out.println("История загрузки \n\n" + fileBackedTaskManager1.getHistory());
+        System.out.println("Получить все Task \n\n" + fileBackedTaskManager1.getAllTasks());
+        System.out.println("Получить все SubTasks \n\n" + fileBackedTaskManager1.getAllSubTasks());
+        System.out.println("Получить все Epics \n\n" + fileBackedTaskManager1.getAllEpics());
     }
 }

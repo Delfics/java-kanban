@@ -1,4 +1,4 @@
-package model;
+package ru.yandex.kanban.model;
 
 import java.util.Objects;
 
@@ -60,7 +60,7 @@ public class Task {
             return false;
         }
         Task otherTask = (Task) o;
-        return  (id == otherTask.getId()) &&
+        return (id == otherTask.getId()) &&
                 Objects.equals(name, otherTask.name) &&
                 Objects.equals(status, otherTask.status) &&
                 Objects.equals(description, otherTask.description);
@@ -69,5 +69,13 @@ public class Task {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, status, description);
+    }
+
+    public TasksType getTaskType() {
+        return TasksType.TASK;
+    }
+
+    public Epic getEpic() {
+        return null;
     }
 }

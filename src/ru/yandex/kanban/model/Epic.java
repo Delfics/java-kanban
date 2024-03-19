@@ -1,4 +1,4 @@
-package model;
+package ru.yandex.kanban.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,5 +50,10 @@ public class Epic extends Task {
     @Override
     public int hashCode() {
         return Objects.hash(subTaskIds);
+    }
+
+    @Override
+    public TasksType getTaskType() {
+        return TasksType.EPIC;
     }
 }

@@ -1,9 +1,9 @@
-package service;
+package ru.yandex.kanban.service;
 
-import model.Epic;
-import model.Status;
-import model.SubTask;
-import model.Task;
+import ru.yandex.kanban.model.Epic;
+import ru.yandex.kanban.model.Status;
+import ru.yandex.kanban.model.SubTask;
+import ru.yandex.kanban.model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,9 +17,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     private final HistoryManager manager = Managers.getDefaultHistory();
 
-    private static int sequence = 1;
+    protected int sequence = 1;
 
-    private int nextId() {
+    protected int nextId() {
         return sequence++;
     }
 
