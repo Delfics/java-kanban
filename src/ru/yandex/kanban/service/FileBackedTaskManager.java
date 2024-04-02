@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
@@ -134,7 +136,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     public void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
-            writer.write("id,type,name,status,description,epic,\n");
+            writer.write("id,type,name,status,description,epic,startTime,duration,\n");
             for (Task task : getAllTasks().values()) {
                 writer.write(toString(task));
             }
@@ -152,22 +154,43 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     public String toString(Task task) {
-        return task.getId() + "," + task.getTaskType() + "," + task.getName() + "," + task.getStatus()
-                + "," + task.getDescription() + "," + task.getEpic() + ",\n";
+        if (task.getDuration() == null) {
+            return task.getId() + "," + task.getTaskType() + "," + task.getName() + "," + task.getStatus() + ","
+                    + task.getDescription() + "," + task.getEpic() + "," + task.getStartTime() + "," +
+                    task.getDuration() + ",\n";
+        } else {
+            return task.getId() + "," + task.getTaskType() + "," + task.getName() + "," + task.getStatus() + ","
+                    + task.getDescription() + "," + task.getEpic() + "," + task.getStartTime() + "," +
+                    task.getDuration().toMinutes() + ",\n";
+        }
     }
 
     public String toString(SubTask subTask) {
-        return subTask.getId() + "," + subTask.getTaskType() + "," + subTask.getName() + "," + subTask.getStatus()
-                + "," + subTask.getDescription() + "," + subTask.getEpicId() + ",\n";
+        if (subTask.getDuration() == null) {
+            return subTask.getId() + "," + subTask.getTaskType() + "," + subTask.getName() + "," + subTask.getStatus()
+                    + "," + subTask.getDescription() + "," + subTask.getEpicId() + "," + subTask.getStartTime()
+                    + "," + subTask.getDuration() + ",\n";
+        } else {
+            return subTask.getId() + "," + subTask.getTaskType() + "," + subTask.getName() + "," + subTask.getStatus()
+                    + "," + subTask.getDescription() + "," + subTask.getEpicId() + "," + subTask.getStartTime()
+                    + "," + subTask.getDuration().toMinutes() + ",\n";
+        }
     }
 
     public String toString(Epic epic) {
-
-        return epic.getId() + "," + epic.getTaskType() + "," + epic.getName() + "," + epic.getStatus()
-                + "," + epic.getDescription() + "," + epic.getEpic() + ",\n";
+        if (epic.getDuration() == null) {
+            return epic.getId() + "," + epic.getTaskType() + "," + epic.getName() + "," + epic.getStatus() + ","
+                    + epic.getDescription() + "," + epic.getEpic() + "," + epic.getStartTime() + "," +
+                    epic.getDuration() + ",\n";
+        } else {
+            return epic.getId() + "," + epic.getTaskType() + "," + epic.getName() + "," + epic.getStatus() + ","
+                    + epic.getDescription() + "," + epic.getEpic() + "," + epic.getStartTime() + "," +
+                    epic.getDuration().toMinutes() + ",\n";
+        }
     }
 
     public void fromStringList(List<String> list) {
+        String nullString = "null";
         for (String line : list) {
             if (line.isEmpty()) {
                 continue;
@@ -180,12 +203,32 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                         case "TASK" -> {
                             Task task = new Task(Integer.parseInt(split[0]), split[2], split[4]);
                             task.setStatus(Status.valueOf(split[3]));
+                            if (split[6].equals(nullString)) {
+                                task.setStartTime(null);
+                            } else {
+                                task.setStartTime(LocalDateTime.parse(split[6]));
+                            }
+                            if (split[7].equals(nullString)) {
+                                task.setDuration(null);
+                            } else {
+                                task.setDuration(Duration.ofMinutes(Integer.parseInt(split[7])));
+                            }
                             this.getAllTasks().put(task.getId(), task);
                         }
                         case "SUBTASK" -> {
                             SubTask subTask = new SubTask(Integer.parseInt(split[0]), split[2], split[4],
                                     Integer.parseInt(split[5]));
                             subTask.setStatus(Status.valueOf(split[3]));
+                            if (split[6].equals(nullString)) {
+                                subTask.setStartTime(null);
+                            } else {
+                                subTask.setStartTime(LocalDateTime.parse(split[6]));
+                            }
+                            if (split[7].equals(nullString)) {
+                                subTask.setDuration(null);
+                            } else {
+                                subTask.setDuration(Duration.ofMinutes(Integer.parseInt(split[7])));
+                            }
                             this.getAllSubTasks().put(subTask.getId(), subTask);
                         }
                         case "EPIC" -> {
@@ -197,6 +240,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                                 }
                             }
                             this.getAllEpics().put(epic.getId(), epic);
+                            Epic epic1 = calculateTimeEpic(epic);
+                            this.getAllEpics().put(epic1.getId(), epic1);
                         }
                     }
                 }

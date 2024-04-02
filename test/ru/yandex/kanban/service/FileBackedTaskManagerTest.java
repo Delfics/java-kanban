@@ -1,10 +1,10 @@
 package ru.yandex.kanban.service;
 
+import org.junit.jupiter.api.Test;
 import ru.yandex.kanban.model.Epic;
 import ru.yandex.kanban.model.Status;
 import ru.yandex.kanban.model.SubTask;
 import ru.yandex.kanban.model.Task;
-import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class FileBackedTaskManagerTest {
+class FileBackedTaskManagerTest extends TaskManagerTest {
     @Test
     void shouldLoadExistEmptyFileAtCreateFileBackedTaskManager() throws IOException {
         int lengthZero = 0;
@@ -72,11 +72,11 @@ class FileBackedTaskManagerTest {
     void shouldLoadTasksFromExistFile() {
         int lengthZero = 0;
         int epicsInFile = 3;
-        int subtaskInFile = 1;
-        int taskInFile = 1;
-        int historyFile = 2;
+        int subtaskInFile = 2;
+        int taskInFile = 3;
+        int historyFile = 3;
 
-        File file = new File("test/resources/task.txt");
+        File file = new File("test/resources/task1.txt");
         FileBackedTaskManager fileBackedTaskManager = TaskManagerFactory.createFileBackedTaskManager(file);
         File autoSave = fileBackedTaskManager.getFile();
 

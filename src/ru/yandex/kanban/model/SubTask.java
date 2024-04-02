@@ -1,5 +1,7 @@
 package ru.yandex.kanban.model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class SubTask extends Task {
@@ -8,7 +10,11 @@ public class SubTask extends Task {
     public SubTask(int id, String name, String description, int epicId) {
         super(id, name, description);
         this.epicId = epicId;
+    }
 
+    public SubTask(int id, String name, String description, int epicId, LocalDateTime startTime, Duration duration) {
+        super(id, name, description, startTime, duration);
+        this.epicId = epicId;
     }
 
     public int getEpicId() {
@@ -18,7 +24,8 @@ public class SubTask extends Task {
     @Override
     public String toString() {
         return "Идентификатор " + super.getId() + "\nТип: Подзадача " + "\nСтатус: " + super.getStatus()
-                + "\nНазвание: " + super.getName() + "\n" + super.getDescription() + "\n" + "id в эпике " + epicId;
+                + "\nНазвание: " + super.getName() + "\n" + super.getDescription() + "\n" + "id в эпике " + epicId +
+                "\nДата: " + getStartTime() + "\nПродолжительность задачи: " + getDuration();
     }
 
     @Override

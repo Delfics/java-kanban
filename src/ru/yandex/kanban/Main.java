@@ -10,6 +10,10 @@ import ru.yandex.kanban.service.TaskManager;
 import ru.yandex.kanban.service.TaskManagerFactory;
 
 import java.io.File;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.TreeSet;
 
 
 public class Main {
@@ -31,7 +35,7 @@ public class Main {
         taskManager.showAllTasks();
         taskManager.showAllEpics();
         taskManager.showAllSubtasks();
-        System.out.println("Проверка 1: окончена.");
+        System.out.println("\n Проверка 1: окончена.");
 
         System.out.println("Поверка 2: Измените статусы созданных объектов, распечатайте их." +
                 " Проверьте, что статус задачи и подзадачи сохранился, а статус эпика рассчитался " +
@@ -85,16 +89,42 @@ public class Main {
         System.out.println("Проверка getTasks " + taskManager.getInMemoryHistoryManager().getHistory());
 
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(
-                new File("C:\\Users\\USER\\IdeaProjects\\java-kanban\\resources\\task.txt"));
+                new File("src\\resources\\task1.txt"));
 
 
-        fileBackedTaskManager.createTask("Проверка таски", "Сохранилась ли таска в файл");
+        Task task = fileBackedTaskManager.createTask("Проверка таски", "Сохранилась ли таска в файл");
+        Task task3 = fileBackedTaskManager.createTask("Проверка таски1", "Сохранилась ли таска в файл1");
         Epic epic = fileBackedTaskManager.createEpic("Проверка Эпика", "Сохранился ли в файл эпик");
         fileBackedTaskManager.createEpic("Проверка Эпика", "Сохранился ли в файл эпик");
         fileBackedTaskManager.createEpic("Проверка Эпика", "Сохранился ли в файл эпик");
         SubTask subTask = fileBackedTaskManager.createSubTask("Проверка СабТаски", "Сохарнился ли файл", epic.getId());
+        SubTask subTask1 = fileBackedTaskManager.createSubTask("Проверка Сабтаски1", "Соханился ли файл1", epic.getId());
         fileBackedTaskManager.getSubTaskById(subTask.getId());
         fileBackedTaskManager.getEpicById(epic.getId());
+
+        System.out.println("Проверка на пересечение \n \n");
+        subTask.setStartTime(LocalDateTime.of(2024, Month.MARCH, 31, 9, 40));
+        subTask.setDuration(Duration.ofMinutes(20));
+        subTask1.setStartTime(LocalDateTime.of(2024, Month.MARCH, 31, 10, 1));
+        subTask1.setDuration(Duration.ofMinutes(10));
+        fileBackedTaskManager.updateSubTask(subTask);
+        fileBackedTaskManager.updateSubTask(subTask1);
+        task.setStartTime(LocalDateTime.of(2024, Month.MARCH, 31, 9, 40));
+        task.setDuration(Duration.ofMinutes(20));
+        task3.setStartTime(LocalDateTime.of(2024, Month.MARCH, 31, 10, 1));
+        task3.setDuration(Duration.ofMinutes(10));
+        fileBackedTaskManager.updateTask(task);
+        Task task4 = fileBackedTaskManager.updateTask(task3);
+
+        Task task5 = fileBackedTaskManager.createTask("Проверка Таски2", "Сохранилалсь ли таска 2", LocalDateTime.of(
+                2024, Month.MARCH, 31, 9, 59), Duration.ofMinutes(5));
+        fileBackedTaskManager.updateTask(task5);
+
+        System.out.println("Проверка хранения \n\n" + fileBackedTaskManager.getPrioritizedTasks());
+
+
+        Epic epic3 = fileBackedTaskManager.updateEpic(epic);
+        System.out.println(epic3);
 
         String s = "id,type,name,status,description,epic,\n" +
                 "11,SUBTASK,Проверка СабТаски,NEW,Сохарнился ли файл,8,\n" +
@@ -104,17 +134,24 @@ public class Main {
                 "\n" +
                 "8,11,";
 
-        /*   System.out.println("Проверка тасок " + fileBackedTaskManager.fromString());*/
 
 
         System.out.println("Проверка на загрузку из файла : \n");
 
 
         FileBackedTaskManager fileBackedTaskManager1 = TaskManagerFactory.createFileBackedTaskManager(new
-                File("C:\\Users\\USER\\IdeaProjects\\java-kanban\\resources\\task.txt"));
-        System.out.println("История загрузки \n\n" + fileBackedTaskManager1.getHistory());
+                File("src\\resources\\task1.txt"));
+        /*System.out.println("История загрузки \n\n" + fileBackedTaskManager1.getHistory());
         System.out.println("Получить все Task \n\n" + fileBackedTaskManager1.getAllTasks());
         System.out.println("Получить все SubTasks \n\n" + fileBackedTaskManager1.getAllSubTasks());
-        System.out.println("Получить все Epics \n\n" + fileBackedTaskManager1.getAllEpics());
+        System.out.println("Получить все Epics \n\n" + fileBackedTaskManager1.getAllEpics());*/
+        Task loadTask = fileBackedTaskManager1.getAllTasks().get(task.getId());
+        System.out.println(loadTask.getStartTime());
+        System.out.println(loadTask.getDuration());
+
+        TreeSet<Task> prioritizedTasks = fileBackedTaskManager1.getPrioritizedTasks();
+
+        System.out.println(prioritizedTasks);
+
     }
 }
