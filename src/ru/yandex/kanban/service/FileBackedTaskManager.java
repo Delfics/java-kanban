@@ -240,8 +240,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                                 }
                             }
                             this.getAllEpics().put(epic.getId(), epic);
-                            Epic epic1 = calculateTimeEpic(epic);
-                            this.getAllEpics().put(epic1.getId(), epic1);
+                            calculateTimeEpic(epic);
+                            this.getAllEpics().put(epic.getId(), epic);
                         }
                     }
                 }

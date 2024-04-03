@@ -109,10 +109,10 @@ public class Main {
         subTask1.setDuration(Duration.ofMinutes(10));
         fileBackedTaskManager.updateSubTask(subTask);
         fileBackedTaskManager.updateSubTask(subTask1);
-        task.setStartTime(LocalDateTime.of(2024, Month.MARCH, 31, 9, 40));
-        task.setDuration(Duration.ofMinutes(20));
-        task3.setStartTime(LocalDateTime.of(2024, Month.MARCH, 31, 10, 1));
-        task3.setDuration(Duration.ofMinutes(10));
+        task.setStatus(Status.DONE);
+        fileBackedTaskManager.updateTask(task);
+        /*task3.setStartTime(LocalDateTime.of(2024, Month.MARCH, 31, 10, 1));
+        task3.setDuration(Duration.ofMinutes(10));*/
         fileBackedTaskManager.updateTask(task);
         Task task4 = fileBackedTaskManager.updateTask(task3);
 
@@ -133,7 +133,6 @@ public class Main {
                 "10,EPIC,Проверка Эпика,NEW,Сохранился ли в файл эпик,null,\n" +
                 "\n" +
                 "8,11,";
-
 
 
         System.out.println("Проверка на загрузку из файла : \n");

@@ -1,5 +1,7 @@
 package ru.yandex.kanban.service;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.kanban.model.Epic;
 import ru.yandex.kanban.model.Status;
@@ -11,10 +13,23 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTaskManagerTest extends TaskManagerTest {
+class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
+
+    @BeforeEach
+    public void init() throws IOException {
+        File dir = new File("test/resources");
+        File file = File.createTempFile("File", "New", dir);
+        manager = TaskManagerFactory.createFileBackedTaskManager(file);
+    }
+
+    @AfterEach
+    public void destroy() throws IOException {
+        Path path = manager.getFile().toPath();
+        Files.delete(path);
+    }
+
     @Test
     void shouldLoadExistEmptyFileAtCreateFileBackedTaskManager() throws IOException {
         int lengthZero = 0;
@@ -71,10 +86,10 @@ class FileBackedTaskManagerTest extends TaskManagerTest {
     @Test
     void shouldLoadTasksFromExistFile() {
         int lengthZero = 0;
-        int epicsInFile = 3;
-        int subtaskInFile = 2;
-        int taskInFile = 3;
-        int historyFile = 3;
+        int epicsInFile = 10;
+        int subtaskInFile = 9;
+        int taskInFile = 6;
+        int historyFile = 14;
 
         File file = new File("test/resources/task1.txt");
         FileBackedTaskManager fileBackedTaskManager = TaskManagerFactory.createFileBackedTaskManager(file);
@@ -100,7 +115,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest {
     }
 
     @Test
-    void test() throws IOException {
+    void shouldBeEqualsManagersCreateAndManagerCreated() throws IOException {
         File dir = new File("test/resources");
         File tempFile = File.createTempFile("File", "New", dir);
         FileBackedTaskManager fileBackedTaskManager = TaskManagerFactory.createFileBackedTaskManager(tempFile);
@@ -122,21 +137,28 @@ class FileBackedTaskManagerTest extends TaskManagerTest {
         FileBackedTaskManager fileBackedTaskManager1 = TaskManagerFactory.createFileBackedTaskManager
                 (fileBackedTaskManager.getFile());
 
-        assertEquals(fileBackedTaskManager.getAllTasks(),fileBackedTaskManager1.getAllTasks(),
+        assertEquals(fileBackedTaskManager.getAllTasks(), fileBackedTaskManager1.getAllTasks(),
                 "Сравнили список тасок у менеджера Создателя файла и у менеджера Загрузчика файла");
-        assertEquals(fileBackedTaskManager.getAllSubTasks(),fileBackedTaskManager1.getAllSubTasks(),
+        assertEquals(fileBackedTaskManager.getAllSubTasks(), fileBackedTaskManager1.getAllSubTasks(),
                 "Сравнили список сабтасок у менеджера Создателя файла и у менеджера Загрузчика файла ");
-        assertEquals(fileBackedTaskManager.getAllEpics(),fileBackedTaskManager1.getAllEpics(),
+        assertEquals(fileBackedTaskManager.getAllEpics(), fileBackedTaskManager1.getAllEpics(),
                 "Сравнили список епиков у менеджера Создателя файла и у менеджера Загрузчика файла");
-        assertEquals(fileBackedTaskManager.getHistory(),fileBackedTaskManager1.getHistory(),
+        assertEquals(fileBackedTaskManager.getHistory(), fileBackedTaskManager1.getHistory(),
                 "Сравнили список историй у менеджера Создателя файла и у менеджера Загрузчика файла");
 
         Task task1 = fileBackedTaskManager.createTask("Проверка", "Некст айди");
         Task task2 = fileBackedTaskManager1.createTask("Проверка", "Некст айди");
 
-        assertEquals(task1,task2);
+        assertEquals(task1, task2);
 
         Path path = tempFile.toPath();
         Files.delete(path);
+    }
+
+    @Test
+    public void shouldThrowArrayIndexOutOfBoundsExceptionWhenLoadInvalidFile() {
+        File file = new File("test/resources/task.txt");
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> TaskManagerFactory.createFileBackedTaskManager(file)
+                , "При считывании битого файла возникает ArrayIndexOutOfBoundsException");
     }
 }

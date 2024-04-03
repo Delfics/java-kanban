@@ -27,13 +27,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     public TreeSet<Task> getPrioritizedTasks() {
         for (Task task : tasks.values()) {
-            if (task.getStartTime() != null) {
+            if (task.getStartTime() != null && !task.getStatus().equals(Status.DONE)) {
                 prioritizedTasks.add(task);
             }
         }
 
         for (SubTask subTask : subTasks.values()) {
-            if (subTask.getStartTime() != null) {
+            if (subTask.getStartTime() != null && !subTask.getStatus().equals(Status.DONE)) {
                 prioritizedTasks.add(subTask);
             }
         }
@@ -180,9 +180,9 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic updateEpic(Epic epic) {
         Epic currentEpic = epics.get(epic.getId());
         if (currentEpic.getStatus().equals(epic.getStatus())) {
-            Epic epic1 = calculateTimeEpic(currentEpic);
-            epics.put(epic1.getId(), epic1);
-            return duplicateEpic(epic1);
+            epic = calculateTimeEpic(epic);
+            epics.put(epic.getId(), epic);
+            return duplicateEpic(epic);
         }
         System.out.println("У Эпика статус изменять нельзя");
         return null;
@@ -263,6 +263,8 @@ public class InMemoryTaskManager implements TaskManager {
             LocalDateTime startTime = subTaskById.getStartTime();
             LocalDateTime endTime = subTaskById.getEndTime();
             if (startTime == null && endTime == null) {
+                continue;
+            } else if (subTaskById.getStatus().equals(Status.DONE)) {
                 continue;
             }
             if (nTime == null) {
