@@ -1,0 +1,8 @@
+id,type,name,status,description,epic,startTime,duration,
+1,TASK,Проверка таски,NEW,Сохранилась ли таска в файл,null,null,null,
+5,SUBTASK,Проверка СабТаски,NEW,Сохарнился ли файл,2,null,null,
+2,EPIC,Проверка Эпика,NEW,Сохранился ли в файл эпик,null,null,null,
+3,EPIC,Проверка Эпика,NEW,Сохранился ли в файл эпик,null,null,null,
+4,EPIC,Проверка Эпика,NEW,Сохранился ли в файл эпик,null,null,null,
+
+2,5,

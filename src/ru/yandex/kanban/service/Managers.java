@@ -1,7 +1,7 @@
 package ru.yandex.kanban.service;
 
 public class Managers {
-    public static TaskManager getDefault() {
+    public static InMemoryTaskManager getDefault() {
         return new InMemoryTaskManager();
     }
 

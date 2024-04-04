@@ -5,6 +5,8 @@ import ru.yandex.kanban.model.Status;
 import ru.yandex.kanban.model.SubTask;
 import ru.yandex.kanban.model.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +22,8 @@ public interface TaskManager {
 
     Task createTask(String name, String description);
 
+    Task createTask(String name, String description, LocalDateTime startTime, Duration duration);
+
     Task updateTask(Task task);
 
     Task getTaskById(int id);
@@ -29,6 +33,9 @@ public interface TaskManager {
     void removeAllTasks();
 
     SubTask createSubTask(String name, String description, int epicId);
+
+    SubTask createSubTask(String name, String description, int epicId, LocalDateTime startTime,
+                          Duration duration);
 
     SubTask updateSubTask(SubTask subTask);
 

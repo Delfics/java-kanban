@@ -1,14 +1,20 @@
 package ru.yandex.kanban.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
     private List<Integer> subTaskIds = new ArrayList<>();
+    private LocalDateTime endTime;
 
     public Epic(int id, String name, String description) {
         super(id, name, description);
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public void removeSubTasks() {
@@ -26,8 +32,9 @@ public class Epic extends Task {
     @Override
     public String toString() {
         return "Идентификатор " + super.getId() + "\nТип: Эпик " + "\nСтатус: "
-                + super.getStatus() + "\nНазвание: " + super.getName()
-                + "\nId подзадач в эпике: \n" + subTaskIds;
+                + super.getStatus() + "\nНазвание: " + super.getName() + "\nId подзадач в эпике: \n" + subTaskIds
+                + "\nДата начала: " + super.getStartTime() + "\nДата окончания:" + super.getEndTime() +
+                "\nПродолжительность задачи: " + super.getDuration();
     }
 
     @Override
@@ -49,7 +56,7 @@ public class Epic extends Task {
 
     @Override
     public int hashCode() {
-        return Objects.hash(subTaskIds);
+        return Objects.hash(super.hashCode(), subTaskIds);
     }
 
     @Override
