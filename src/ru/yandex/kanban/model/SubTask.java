@@ -45,7 +45,7 @@ public class SubTask extends Task {
 
     @Override
     public int hashCode() {
-        return Objects.hash(epicId);
+        return Objects.hash(super.hashCode(), epicId);
     }
 
     @Override
