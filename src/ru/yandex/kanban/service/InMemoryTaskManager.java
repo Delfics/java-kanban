@@ -305,7 +305,8 @@ public class InMemoryTaskManager implements TaskManager {
             prioritizedTasks.add(task);
             return task;
         }
-        TreeSet<Task> newPrioritizedTasks = prioritizedTasks.stream()
+        getPrioritizedTasks();
+        TreeSet<Task> newPrioritizedTasks = getPrioritizedTasks().stream()
                 .filter((task1) -> checkDataTime(task1, task))
                 .collect(Collectors.toCollection(TreeSet::new));
         if (prioritizedTasks.equals(newPrioritizedTasks)) {
