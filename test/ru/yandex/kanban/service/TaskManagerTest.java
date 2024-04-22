@@ -122,7 +122,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         String description = "Test Epic Description";
         Epic epicResponse = manager.createEpic("Another Epic", "Another Description");
         Epic epic = new Epic(epicResponse.getId(), name, description);
-        assertNotEquals(epicResponse, epic, "Эпики равны");
+        assertNotEquals(epicResponse, epic, "Эпики не равны");
 
         epicResponse = manager.updateEpic(epic);
 
@@ -211,7 +211,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertNotEquals(epic.getStatus(), subTask1.getStatus(), "Если у SubTask изменился статус, " +
                 " на DONE то и у эпика остается статус IN_PROGRESS");
         manager.getEpicById(epic.getId());
-        manager.updateEpic(epic);
+        epic = manager.updateEpic(epic);
 
         assertEquals(epic.getStartTime(), subTask.getStartTime(), "Время начала Epic будет равно началу" +
                 "самой ранней SubTask");

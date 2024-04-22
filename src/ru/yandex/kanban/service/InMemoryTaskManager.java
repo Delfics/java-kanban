@@ -116,13 +116,13 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public SubTask createSubTask(String name, String description, int epicId, LocalDateTime startTime,
                                  Duration duration) {
-        SubTask subTask = new SubTask(nextId(), name, description, epicId);
-        epics.get(epicId).addSubTaskId(subTask.getId());
+        SubTask subTask = new SubTask(nextId(), name, description, epicId, startTime, duration);
         calculateStatus(subTask.getStatus(), epicId);
         SubTask subTask1 = (SubTask) calculateTimeTask(subTask);
         if (subTask.getStartTime() == null) {
             return duplicateSubTask(subTask1);
         } else {
+            epics.get(epicId).addSubTaskId(subTask.getId());
             subTasks.put(subTask.getId(), subTask);
             return duplicateSubTask(subTask);
         }
@@ -135,7 +135,8 @@ public class InMemoryTaskManager implements TaskManager {
             subTasks.put(subTask.getId(), subTask);
             return duplicateSubTask(subTask);
         } else {
-            return duplicateSubTask((SubTask) calculateTimeTask(subTask));
+            subTask = (SubTask) calculateTimeTask(subTask);
+            return duplicateSubTask(subTask);
         }
     }
 
@@ -143,7 +144,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeSubTaskById(int id) {
         SubTask subTask = subTasks.get(id);
         Epic epic = epics.get(subTask.getEpicId());
-        epic.getSubTasksListInEpic().remove(subTask.getId());
+        epic.getSubTasksListInEpic().remove((Integer) subTask.getId());
         subTasks.remove(id);
     }
 
@@ -292,7 +293,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public boolean checkDataTime(Task task1, Task task2) {
-        return task1.getEndTime().isBefore(task2.getStartTime());
+        boolean before = task1.getEndTime().isBefore(task2.getStartTime());
+        return before;
     }
 
     private Task calculateTimeTask(Task task) {
@@ -305,10 +307,10 @@ public class InMemoryTaskManager implements TaskManager {
             prioritizedTasks.add(task);
             return task;
         }
-        getPrioritizedTasks();
         TreeSet<Task> newPrioritizedTasks = getPrioritizedTasks().stream()
                 .filter((task1) -> checkDataTime(task1, task))
                 .collect(Collectors.toCollection(TreeSet::new));
+
         if (prioritizedTasks.equals(newPrioritizedTasks)) {
             if (task.getTaskType().equals(TasksType.TASK)) {
                 tasks.put(task.getId(), task);
