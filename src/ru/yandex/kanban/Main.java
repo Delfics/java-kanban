@@ -105,7 +105,7 @@ public class Main {
         System.out.println("Проверка на пересечение \n \n");
         subTask.setStartTime(LocalDateTime.of(2024, Month.MARCH, 31, 9, 40));
         subTask.setDuration(Duration.ofMinutes(20));
-        subTask1.setStartTime(LocalDateTime.of(2024, Month.MARCH, 31, 10, 1));
+        subTask1.setStartTime(LocalDateTime.of(2024, Month.MARCH, 31, 9, 41));
         subTask1.setDuration(Duration.ofMinutes(10));
         fileBackedTaskManager.updateSubTask(subTask);
         fileBackedTaskManager.updateSubTask(subTask1);
